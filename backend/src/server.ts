@@ -127,6 +127,44 @@ return res.json({
 }
 );
 
+app.post(
+	"/upload",
+	upload.single("audio"),
+	async (req, res) => {
+		try {
+
+			const result =
+				await sarvam.speechToText.transcribe({
+					file: fs.createReadStream(
+						req.file!.path
+					)
+				});
+
+			const transcript =
+				result.transcript;
+
+
+
+			const response =
+				await runAgent(
+					transcript,
+					conversationHistory
+				);
+return res.json({
+	transcript,
+	response
+});
+
+} catch (error) {
+	console.error(error);
+
+	res.status(500).json({
+		error: "Processing failed"
+	});
+}
+}
+);
+
 app.listen(3000, () => {
 console.log("Server running on port 3000");
 });
