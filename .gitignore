@@ -1,0 +1,25 @@
+# Dependencies
+**/node_modules
+
+# Environment variables
+**/.env
+
+# Build folders
+frontend/.svelte-kit
+frontend/build
+frontend/dist
+
+backend/dist
+
+# Uploads (optional)
+backend/uploads/*
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cursor / VS Code
+.vscode/
