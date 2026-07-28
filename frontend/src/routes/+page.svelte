@@ -73,7 +73,7 @@
 				status = "THINKING";
 
 				const response = await fetch(
-					"http://localhost:3000/upload",
+					"https://voice-to-voice-ai-assistant.onrender.com/upload",
 					{
 						method: "POST",
 						body: formData
