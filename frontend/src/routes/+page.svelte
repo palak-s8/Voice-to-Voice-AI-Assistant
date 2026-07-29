@@ -21,18 +21,31 @@
 	function speak(text: string) {
 		speechSynthesis.cancel();
 
-		const utterance =
-			new SpeechSynthesisUtterance(text);
+		const utterance = new SpeechSynthesisUtterance(text);
 
 		utterance.rate = 1;
 		utterance.pitch = 1;
 		utterance.volume = 1;
 
 		utterance.onend = () => {
+			console.log("Speech ended");
+			status = "IDLE";
+		};
+
+		utterance.onerror = (e) => {
+			console.error("Speech error:", e);
 			status = "IDLE";
 		};
 
 		speechSynthesis.speak(utterance);
+
+		// Fallback for iPhone Safari
+		setTimeout(() => {
+			if (status === "SPEAKING") {
+				console.log("Fallback resetting status");
+				status = "IDLE";
+			}
+		}, 15000);
 	}
 
 	async function startRecording() {
@@ -108,6 +121,7 @@
 					chatContainer.scrollHeight;
 
 				status = "SPEAKING";
+				console.log("Speaking started");
 
 				speak(data.response);
 
