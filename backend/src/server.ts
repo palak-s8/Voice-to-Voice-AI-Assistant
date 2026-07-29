@@ -98,40 +98,43 @@ app.post(
 	"/upload",
 	upload.single("audio"),
 	async (req, res) => {
+		console.log("===== /upload called =====");
+		console.log("req.file:", req.file);
+
 		try {
-
-			const result =
-				await sarvam.speechToText.transcribe({
-					file: fs.createReadStream(
-						req.file!.path
-					)
+			if (!req.file) {
+				return res.status(400).json({
+					error: "No audio uploaded"
 				});
+			}
 
-			const transcript =
-				result.transcript;
+			console.log("Starting transcription...");
 
+			const result = await sarvam.speechToText.transcribe({
+				file: fs.createReadStream(req.file.path)
+			});
 
+			const transcript = result.transcript;
+			console.log("Transcript:", transcript);
 
-			const response =
-				await runAgent(
-					transcript,
-					conversationHistory
-				);
-return res.json({
-	transcript,
-	response
-});
+			const response = await runAgent(
+				transcript,
+				conversationHistory
+			);
 
-} catch (error) {
-	console.error(error);
+			return res.json({
+				transcript,
+				response
+			});
+		} catch (error) {
+			console.error(error);
 
-	res.status(500).json({
-		error: "Processing failed"
-	});
-}
-}
+			return res.status(500).json({
+				error: "Processing failed"
+			});
+		}
+	}
 );
-
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
