@@ -3,6 +3,11 @@ dotenv.config();
 import express from "express";
 import axios from "axios";
 import { tavily } from "@tavily/core";
+
+if (!fs.existsSync("uploads")) {
+	fs.mkdirSync("uploads", { recursive: true });
+}
+
 import cors from "cors";
 import multer from "multer";
 import fs from "fs";
@@ -127,44 +132,8 @@ return res.json({
 }
 );
 
-app.post(
-	"/upload",
-	upload.single("audio"),
-	async (req, res) => {
-		try {
+const PORT = process.env.PORT || 3000;
 
-			const result =
-				await sarvam.speechToText.transcribe({
-					file: fs.createReadStream(
-						req.file!.path
-					)
-				});
-
-			const transcript =
-				result.transcript;
-
-
-
-			const response =
-				await runAgent(
-					transcript,
-					conversationHistory
-				);
-return res.json({
-	transcript,
-	response
-});
-
-} catch (error) {
-	console.error(error);
-
-	res.status(500).json({
-		error: "Processing failed"
-	});
-}
-}
-);
-
-app.listen(3000, () => {
-console.log("Server running on port 3000");
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`);
 });
