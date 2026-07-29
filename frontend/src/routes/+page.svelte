@@ -4,7 +4,7 @@
 
 	let mediaRecorder: MediaRecorder;
 	let audioChunks: Blob[] = [];
-
+	let mediaStream: MediaStream;
 	let chatContainer: HTMLDivElement;
 
 	let status = $state("IDLE");
@@ -21,11 +21,17 @@
 	function speak(text: string) {
 		speechSynthesis.cancel();
 
+		console.log("Before speak:", status);
+
 		const utterance = new SpeechSynthesisUtterance(text);
 
 		utterance.rate = 1;
 		utterance.pitch = 1;
 		utterance.volume = 1;
+
+		utterance.onstart = () => {
+			console.log("Speech started");
+		};
 
 		utterance.onend = () => {
 			console.log("Speech ended");
@@ -33,16 +39,23 @@
 		};
 
 		utterance.onerror = (e) => {
-			console.error("Speech error:", e);
+			console.log("Speech error", e);
 			status = "IDLE";
 		};
 
 		speechSynthesis.speak(utterance);
 
-		// Fallback for iPhone Safari
 		setTimeout(() => {
+			console.log(
+				"15 sec timer",
+				status,
+				speechSynthesis.speaking,
+				speechSynthesis.pending
+			);
+
 			if (status === "SPEAKING") {
-				console.log("Fallback resetting status");
+				console.log("Forcing IDLE");
+				speechSynthesis.cancel();
 				status = "IDLE";
 			}
 		}, 15000);
@@ -50,14 +63,13 @@
 
 	async function startRecording() {
 		try {
-			const stream =
-				await navigator.mediaDevices.getUserMedia({
-					audio: true
-				});
+			mediaStream = await navigator.mediaDevices.getUserMedia({
+				audio: true
+			});
 
 			audioChunks = [];
 
-			mediaRecorder = new MediaRecorder(stream);
+			mediaRecorder = new MediaRecorder(mediaStream);
 
 			mediaRecorder.ondataavailable = (
 				event
@@ -82,7 +94,7 @@
 				);
 				loading = true;
 				status = "TRANSCRIBING"
-
+				const response = await fetch(...);
 				status = "THINKING";
 
 				const response = await fetch(
@@ -126,6 +138,7 @@
 				speak(data.response);
 
 				loading = false;
+				mediaStream.getTracks().forEach(track => track.stop());
 			};
 
 			mediaRecorder.start();
@@ -138,7 +151,13 @@
 	}
 
 	function stopRecording() {
-		mediaRecorder.stop();
+		if (mediaRecorder && mediaRecorder.state !== "inactive") {
+			mediaRecorder.stop();
+		}
+
+		if (mediaStream) {
+			mediaStream.getTracks().forEach(track => track.stop());
+		}
 
 		status = "IDLE";
 	}
