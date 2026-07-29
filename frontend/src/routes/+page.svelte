@@ -94,7 +94,13 @@
 				);
 				loading = true;
 				status = "TRANSCRIBING"
-				const response = await fetch(...);
+				const response = await fetch(
+					"https://voice-to-voice-ai-assistant.onrender.com/upload",
+					{
+						method: "POST",
+						body: formData
+					}
+				);
 				status = "THINKING";
 
 				const response = await fetch(
