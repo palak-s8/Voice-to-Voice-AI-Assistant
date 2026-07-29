@@ -3,11 +3,6 @@ dotenv.config();
 import express from "express";
 import axios from "axios";
 import { tavily } from "@tavily/core";
-
-if (!fs.existsSync("uploads")) {
-	fs.mkdirSync("uploads", { recursive: true });
-}
-
 import cors from "cors";
 import multer from "multer";
 import fs from "fs";
@@ -15,6 +10,11 @@ import { SarvamAIClient } from "sarvamai";
 import OpenAI from "openai";
 import { runAgent } from "./services/agent";
 let silenceTimer: number;
+
+if (!fs.existsSync("uploads")) {
+	fs.mkdirSync("uploads", { recursive: true });
+}
+
 
 
 const app = express();
