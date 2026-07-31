@@ -46,12 +46,10 @@ export async function runAgent(
 	const assistantMessage =
 		firstResponse.choices[0].message;
 	
-
+	messages.push(assistantMessage);
 
 	// No tool needed
 	if (!assistantMessage.tool_calls) {
-
-		conversationHistory.push(assistantMessage);
 	
 		return assistantMessage.content;
 	}
