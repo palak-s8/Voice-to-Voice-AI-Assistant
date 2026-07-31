@@ -19,7 +19,7 @@
 	>([]);
 
 	function speak(text: string) {
-		speechSynthesis.cancel();
+		// speechSynthesis.cancel();
 
 		console.log("Before speak:", status);
 
