@@ -25,6 +25,25 @@
 
 		const utterance = new SpeechSynthesisUtterance(text);
 
+		console.log(speechSynthesis.getVoices());
+
+		const voices = speechSynthesis.getVoices();
+
+		const englishVoice = voices.find(
+			voice =>
+				voice.lang.startsWith("en") &&
+				(
+					voice.name.includes("Samantha") ||
+					voice.name.includes("Karen") ||
+					voice.name.includes("Daniel")
+				)
+		);
+
+		if (englishVoice) {
+			utterance.voice = englishVoice;
+			console.log("Using voice:", englishVoice.name);
+		}
+
 		utterance.rate = 1;
 		utterance.pitch = 1;
 		utterance.volume = 1;
