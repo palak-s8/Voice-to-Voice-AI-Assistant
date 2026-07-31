@@ -95,82 +95,42 @@ app.get("/test-ai", async (_req, res) => {
 });
 
 app.post(
-	"/upload",
-	upload.single("audio"),
-	async (req, res) => {
-		console.log("===== /upload called =====");
-		console.log("req.file:", req.file);
+    "/upload",
+    upload.single("audio"),
+    async (req, res) => {
+        console.log("===== /upload called =====");
+        console.log("req.file:", req.file);
 
-		try {
-			if (!req.file) {
-				return res.status(400).json({
-					error: "No audio uploaded"
-				});
-			}
+        try {
+            if (!req.file) {
+                return res.status(400).json({
+                    error: "No audio uploaded"
+                });
+            }
 
-			console.log("Starting transcription...");
+            console.log("Starting transcription...");
 
-			const result = await sarvam.speechToText.transcribe({
-				file: fs.createReadStream(req.file.path)
-			});
+            const result = await sarvam.speechToText.transcribe({
+                file: fs.createReadStream(req.file.path)
+            });
 
-			const transcript = result.transcript;
-			console.log("Transcript:", transcript);
+            const transcript = result.transcript;
+            console.log("Transcript:", transcript);
 
-			const response = "Hello from backend";
+            const response = "Hello from backend";
 
-			return res.json({
-				transcript,
-				response
-			});
-		} try {
-			console.log("===== /upload called =====");
-			console.log("req.file:", req.file);
-		
-			if (!req.file) {
-				return res.status(400).json({
-					error: "No audio uploaded"
-				});
-			}
-		
-			console.log("1. Starting transcription");
-		
-			const result = await sarvam.speechToText.transcribe({
-				file: fs.createReadStream(req.file.path)
-			});
-		
-			console.log("2. Transcription finished");
-		
-			const transcript = result.transcript;
-			console.log("Transcript:", transcript);
-		
-			console.log("3. Calling runAgent");
-		
-			const response = await runAgent(
-				transcript,
-				conversationHistory
-			);
-		
-			console.log("4. runAgent finished");
-		
-			return res.json({
-				transcript,
-				response
-			});
-		}
-		catch (error: any) {
-			console.error("UPLOAD ERROR:");
-			console.error(error);
-		
-			if (error?.response) {
-				console.error(error.response.data);
-			}
-		
-			return res.status(500).json({
-				error: error?.message || "Processing failed"
-			});
-		}
-	}
+            return res.json({
+                transcript,
+                response
+            });
+        } catch (error: any) {
+            console.error(error);
+
+            return res.status(500).json({
+                error: error?.message || "Processing failed"
+            });
+        }
+    }
 );
 const PORT = process.env.PORT || 3000;
 
