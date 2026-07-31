@@ -1,105 +1,133 @@
 # 🎤 Voice-to-Voice AI Assistant
 
-An AI-powered Voice-to-Voice Assistant that enables users to interact naturally using speech. The assistant converts speech to text, understands user queries using GPT-4.1, performs tool-based tasks, and responds using natural voice.
+An AI-powered voice assistant that enables natural voice conversations using Speech-to-Text, Large Language Models, and Text-to-Speech. The assistant can answer general questions, perform web searches, provide weather updates, solve mathematical calculations, manage notes, and respond conversationally.
 
 ---
 
-## 🚀 Features
+## 🚀 Live Demo
+
+🌐 Frontend (Vercel)  
+https://voice-to-voice-ai-assistant-rust.vercel.app/
+
+⚙️ Backend (Render)  
+https://voice-to-voice-ai-assistant.onrender.com/
+
+---
+
+# ✨ Features
 
 - 🎙️ Voice Recording
-- 🗣️ Speech-to-Text using Sarvam AI
-- 🤖 AI-powered conversations using GPT-4.1
+- 📝 Speech-to-Text using Sarvam AI
+- 🤖 AI Responses powered by OpenRouter GPT-4.1
 - 🌦️ Real-time Weather Information
-- 🔍 Web Search using Tavily
-- 📝 Save and Retrieve Notes
-- 🧮 Calculator
-- 🕒 Current Date & Time
-- 🔊 Text-to-Speech Responses
-- 💬 Conversation Memory
-- 🗑️ Clear Chat
-- 📱 Clean and Responsive User Interface
+- 🔍 Web Search
+- 🧮 Calculator Tool
+- 📝 Notes Creation & Retrieval
+- 📅 Current Date & Time
+- 🔊 Browser Text-to-Speech
+- 💬 Chat Interface
+- 📱 Responsive Design (Desktop & Mobile)
 
 ---
 
-## 🛠️ Technology Stack
+# 🛠️ Tech Stack
 
-### Frontend
+## Frontend
 - SvelteKit
 - TypeScript
-- HTML
-- CSS
+- HTML5
+- CSS3
 
-### Backend
+## Backend
 - Node.js
 - Express.js
 - TypeScript
 
-### AI & APIs
-- GPT-4.1 (OpenRouter)
+## AI Services
+- OpenRouter GPT-4.1
 - Sarvam AI (Speech-to-Text)
-- Browser SpeechSynthesis API (Text-to-Speech)
+- Browser Speech Synthesis API
+
+## External APIs
 - Tavily Search API
 - OpenWeather API
+
+## Deployment
+- Vercel (Frontend)
+- Render (Backend)
+
+---
+
+# 🏗️ System Architecture
+
+```
+                User
+                  │
+                  ▼
+        🎤 Voice Recording
+                  │
+                  ▼
+      Sarvam AI Speech-to-Text
+                  │
+                  ▼
+          AI Agent (GPT-4.1)
+                  │
+      ┌───────────┼────────────┐
+      │           │            │
+      ▼           ▼            ▼
+ Weather      Web Search    Calculator
+      │           │            │
+      └───────────┼────────────┘
+                  │
+                  ▼
+         AI Generated Response
+                  │
+                  ▼
+ Browser Text-to-Speech + Chat UI
+```
 
 ---
 
 # 📂 Project Structure
 
 ```
-VOICE-ASSISTANT
+Voice-to-Voice-AI-Assistant/
+
 │
-├── backend
-│   ├── src
-│   │   ├── services
-│   │   │   ├── agent.ts
-│   │   │   └── ai.ts
-│   │   │
-│   │   ├── tools
-│   │   │   ├── calculator.ts
-│   │   │   ├── dateTime.ts
-│   │   │   ├── notes.ts
-│   │   │   ├── search.ts
-│   │   │   └── weather.ts
-│   │   │
-│   │   ├── dispatcher.ts
-│   │   ├── server.ts
-│   │   └── toolRegistery.ts
-│   │
-│   ├── uploads
-│   ├── package.json
-│   └── tsconfig.json
+├── frontend/
+│   ├── src/
+│   ├── static/
+│   └── package.json
 │
-├── frontend
-│   ├── src
-│   ├── static
-│   ├── package.json
-│   └── vite.config.ts
+├── backend/
+│   ├── src/
+│   │   ├── services/
+│   │   ├── tools/
+│   │   └── server.ts
+│   ├── uploads/
+│   └── package.json
 │
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ---
 
 # ⚙️ Installation
 
-## 1. Clone the Repository
+## Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/palak-s8/Voice-to-Voice-AI-Assistant.git
+```
+
+```bash
+cd Voice-to-Voice-AI-Assistant
 ```
 
 ---
 
-## 2. Install Dependencies
-
-### Backend
-
-```bash
-cd backend
-npm install
-```
-
-### Frontend
+## Install Frontend
 
 ```bash
 cd frontend
@@ -108,105 +136,85 @@ npm install
 
 ---
 
-## 3. Configure Environment Variables
-
-Create a `.env` file inside the **backend** folder.
-
-Add your API keys:
-
-```
-OPENROUTER_API_KEY=
-SARVAM_API_KEY=
-OPENWEATHER_API_KEY=
-TAVILY_API_KEY=
-```
-
----
-
-## 4. Start the Backend
+## Install Backend
 
 ```bash
 cd backend
-npm run dev
+npm install
 ```
 
 ---
 
-## 5. Start the Frontend
+# 🔑 Environment Variables
+
+Create a `.env` file inside the backend folder.
+
+```env
+SARVAM_API_KEY=your_key
+
+OPENROUTER_API_KEY=your_key
+
+TAVILY_API_KEY=your_key
+
+OPENWEATHER_API_KEY=your_key
+```
+
+---
+
+# ▶️ Running the Project
+
+## Backend
+
+```bash
+cd backend
+npm start
+```
+
+## Frontend
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-Open:
-
-```
-http://localhost:5173
-```
-
 ---
 
-# 🔄 Workflow
+# 🧠 AI Workflow
 
-1. User clicks **Start Listening**
-2. Voice is recorded through the browser microphone.
-3. Audio is sent to the backend.
-4. Sarvam AI converts speech into text.
-5. GPT-4.1 processes the request.
-6. The assistant decides whether to use a tool.
-7. The required tool executes (Weather, Search, Notes, Calculator, or Date & Time).
-8. The response is sent back to the frontend.
-9. The browser reads the response aloud using Text-to-Speech.
-
----
-
-# 🧰 Available Tools
-
-| Tool | Description |
-|------|-------------|
-| 🌦️ Weather | Fetches current weather information |
-| 🔍 Search | Performs real-time web searches |
-| 📝 Notes | Saves and retrieves notes |
-| 🧮 Calculator | Solves mathematical expressions |
-| 🕒 Date & Time | Returns the current date and time |
+1. User records voice.
+2. Audio is uploaded to the Express backend.
+3. Sarvam AI converts speech into text.
+4. GPT-4.1 processes the request.
+5. The AI Agent selects the appropriate tool when required.
+6. Tool results are returned to GPT.
+7. GPT generates the final response.
+8. Response is displayed in the chat.
+9. Browser Speech Synthesis speaks the response.
 
 ---
 
 # 📸 Screenshots
 
-### Home Screen
+## Home Screen
 
-*(Add screenshot here)*
+<img width="900" alt="Home Screen" src="assets/home.png">
 
-### Voice Interaction
+## Voice Conversation
 
-*(Add screenshot here)*
-
-### Weather Tool
-
-*(Add screenshot here)*
-
-### Calculator
-
-*(Add screenshot here)*
-
-### Notes Tool
-
-*(Add screenshot here)*
+<img width="900" alt="Conversation" src="assets/chat.png">
 
 ---
 
-# 🚀 Future Improvements
+# 🔮 Future Improvements
 
-- Wake word detection ("Hey Assistant")
-- Multi-language support
-- Email integration
-- Calendar integration
-- Smart reminders
-- Persistent chat history
-- User authentication
-- Mobile application
+- Conversation Memory
+- Multiple Language Support
+- Voice Selection
+- Authentication
+- Database Storage
+- User Profiles
+- AI Personalization
+- Conversation History
 
 ---
 
@@ -214,6 +222,12 @@ http://localhost:5173
 
 **Palak Shah**
 
-B.Tech Information Technology
+Information Technology Engineering Student
 
-Voice-to-Voice AI Assistant Project
+GitHub: https://github.com/palak-s8
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
