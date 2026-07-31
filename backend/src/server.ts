@@ -117,7 +117,10 @@ app.post(
             const transcript = result.transcript;
             console.log("Transcript:", transcript);
 
-            const response = "Hello from backend";
+            const response = await runAgent(
+				transcript,
+				conversationHistory
+			);
 
             return res.json({
                 transcript,
