@@ -105,12 +105,13 @@
 			};
 
 			mediaRecorder.onstop = async () => {
-				const audioBlob = new Blob(
-					audioChunks,
-					{
-						type: "audio/webm"
-					}
-				);
+				console.log("onstop fired");
+
+				const audioBlob = new Blob(audioChunks, {
+					type: "audio/webm"
+				});
+
+				console.log("Blob size:", audioBlob.size);
 
 				const formData = new FormData();
 
@@ -119,53 +120,64 @@
 					audioBlob,
 					"recording.webm"
 				);
-				loading = true;
-				status = "TRANSCRIBING";
 
-				const response = await fetch(
-					"https://voice-to-voice-ai-assistant.onrender.com/upload",
-					{
-						method: "POST",
-						body: formData
-					}
-				);
+				try {
+					loading = true;
+					status = "TRANSCRIBING";
 
-				status = "THINKING";
+					console.log("Before fetch");
 
-				const data =
-					await response.json();
+					const response = await fetch(
+						"https://voice-to-voice-ai-assistant.onrender.com/upload",
+						{
+							method: "POST",
+							body: formData
+						}
+					);
 
-				messages.push({
-					role: "user",
-					content: data.transcript,
-					time: new Date().toLocaleTimeString("en-IN", {
-						hour: "2-digit",
-						minute: "2-digit",
-						hour12: true
-					})
-				});
+					console.log("After fetch:", response.status);
 
-				messages.push({
-					role: "assistant",
-					content: data.response,
-					time: new Date().toLocaleTimeString([], {
-						hour: "2-digit",
-						minute: "2-digit"
-					})
-				});
+					status = "THINKING";
 
-				await tick();
+					const data = await response.json();
 
-				chatContainer.scrollTop =
-					chatContainer.scrollHeight;
+					console.log("Backend response:", data);
 
-				status = "SPEAKING";
-				console.log("Speaking started");
+					messages.push({
+						role: "user",
+						content: data.transcript,
+						time: new Date().toLocaleTimeString("en-IN", {
+							hour: "2-digit",
+							minute: "2-digit",
+							hour12: true
+						})
+					});
 
-				speak(data.response);
+					messages.push({
+						role: "assistant",
+						content: data.response,
+						time: new Date().toLocaleTimeString([], {
+							hour: "2-digit",
+							minute: "2-digit"
+						})
+					});
 
-				loading = false;
-				mediaStream.getTracks().forEach(track => track.stop());
+					await tick();
+
+					chatContainer.scrollTop =
+						chatContainer.scrollHeight;
+
+					status = "SPEAKING";
+
+					speak(data.response);
+
+					loading = false;
+
+					mediaStream.getTracks().forEach(track => track.stop());
+
+				} catch (err) {
+					console.error("FETCH FAILED:", err);
+				}
 			};
 
 			mediaRecorder.start();
