@@ -20,12 +20,14 @@
 
 	function speak(text: string) {
 		// speechSynthesis.cancel();
-
+		
 		console.log("Before speak:", status);
 
 		const utterance = new SpeechSynthesisUtterance(text);
-
+		utterance.lang = "en-US";
 		console.log(speechSynthesis.getVoices());
+
+		console.log("Number of voices:", speechSynthesis.getVoices().length);
 
 		const voices = speechSynthesis.getVoices();
 
@@ -50,6 +52,7 @@
 
 		utterance.onstart = () => {
 			console.log("Speech started");
+			console.log("Voice:", utterance.voice?.name);
 		};
 
 		utterance.onend = () => {
@@ -61,6 +64,11 @@
 			console.log("Speech error", e);
 			status = "IDLE";
 		};
+
+
+		console.log("Voices:", speechSynthesis.getVoices());
+		console.log("Speaking text:", text);
+		console.log("Speech synthesis speaking:", speechSynthesis.speaking);
 
 		speechSynthesis.speak(utterance);
 
